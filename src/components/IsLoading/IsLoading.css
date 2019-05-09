@@ -1,0 +1,9 @@
+.valign-wrapper {
+  margin: 20px;;
+}
+
+
+.valign-wrapper p {
+  margin-left: 15px;
+  font-weight: 500;
+}

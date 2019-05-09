@@ -1,17 +1,23 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import Table from './Table';
-import TableHead from './TableHead';
+
 import TableBody from './TableBody';
+import IsLoading from '../IsLoading/IsLoading';
 
 class TableComp extends Component {
-  state = {
-    parents: [],
-    error: null,
-    isLoading: true, //delay - display loading message
-  };
+    state = {
+      parents: [],
+      error: null,
+      isLoading: true
+    };
 
   componentDidMount() {
+    setTimeout(function() {
+      this.setState({
+        isLoading: false,
+      })
+    }.bind(this),3000); //loading delay
+
     axios
 
       // EXTERNAL API LINK:
@@ -39,42 +45,46 @@ class TableComp extends Component {
       // .catch(error => this.setState({error, isLoading: false}));
 
       //MY OWN API JSON
-      .get("https://api.myjson.com/bins/1gmgoi")
+      .get("https://api.myjson.com/bins/gvuuu")
       .then(response => {
         this.setState({
-          parents: response.data.parents,
-          isLoading: false
+          isLoading: true,
+          parents: response.data.parents
         });
       })
       .catch(error => this.setState({error, isLoading: false}));
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.isLoading);
+  }
+
 
   render(){
     const {isLoading, parents} = this.state;
+
     return(
           !isLoading ? (
             //users.map(user => {
             parents.map(parent => {
-              const { id, name, yearOfBirth, numChildren, profession } = parent;
-              // const { id } = parent;
+              // const { id, name, yearOfBirth, numChildren, profession } = parent;
+              const { id } = parent;
               return (
-                <tr key={id}>
-                  <td>{id}</td>
-                  <td>{name}</td>
-                  <td>{yearOfBirth}</td>
-                  <td>{numChildren}
-                    {/* <a href="/" className="btn-floating btn-small waves-effect waves-light blue"><i className="material-icons">+</i></a> */}
-                  </td>
-                  <td>{profession}</td>
-                </tr>
+                <TableBody key={id} item={parent}/>
+                // <tr key={id}>
+                //   <td>{id}</td>
+                //   <td>{name}</td>
+                //   <td>{yearOfBirth}</td>
+                //   <td>{numChildren}
+                //     {/* <a href="/" className="btn-floating btn-small waves-effect waves-light blue"><i className="material-icons">+</i></a> */}
+                //   </td>
+                //   <td>{profession}</td>
+                // </tr>
               );
             })
           ) : (
-            <p>Loading...</p>
+            <IsLoading />
           )
-
-          
     );
   }
 }
