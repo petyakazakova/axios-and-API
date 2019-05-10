@@ -1,8 +1,7 @@
 import React from 'react';
 import TableChildren from '../TableChildren/TableChildren';
 
-// {typeof !item.numChildren === "number" && <ChildrenTable />}
-
+//a showcase if both endpoints were in one json. if statement to test whether numChildren is a number or an object
 
 const TableBody = ({item}) => (
       <tr>

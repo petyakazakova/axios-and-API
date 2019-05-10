@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import IsLoadingStyles from './IsLoading.css';
 
 class IsLoading extends Component {
   render(){

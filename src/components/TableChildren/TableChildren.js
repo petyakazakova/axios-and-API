@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const TableChildren = ({item}) => (
+class TableChildren extends Component {
+  render(){
+    return(
       <table>
         <thead>
           <tr>
@@ -11,13 +13,14 @@ const TableChildren = ({item}) => (
         </thead>
         <tbody>
           <tr>
-            <td>{item.numChildren.name}</td>
-            <td>{item.numChildren.yearOfBirth}</td>
-            <td>{item.numChildren.mother}</td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
         </tbody>
       </table>
-  );
-
+    )
+  }
+}
 
 export default TableChildren;

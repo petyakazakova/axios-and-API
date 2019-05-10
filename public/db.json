@@ -1,29 +1,10 @@
 {
-  "parents" : [
+  "persons" : [
     {
       "id":1,
       "name":"Albert Einstein",
       "yearOfBirth":1879,
-      "numChildren": [
-          {
-            "idChild":11,
-            "name":"Lieserl Einstein",
-            "yearOfBirth":1902,
-            "mother":"Mileva Marić"
-          },
-          {
-            "idChild":12,
-            "name":"Hans Albert Einstein",
-            "yearOfBirth":1904,
-            "mother":"Mileva Marić"
-          },
-          {
-            "idChild":13,
-            "name":"Eduard \"Tete\" Einstein",
-            "yearOfBirth":1910,
-            "mother":"Mileva Marić"
-          }
-      ],
+      "numChildren": 3,
       "profession":"Theoretical physicist"
     },
     {
@@ -49,6 +30,27 @@
     }
   ],
   "children" : [
+    {
+      "name":"Lieserl Einstein",
+      "yearOfBirth":1902,
+      "mother":"Mileva Marić"
+    },
+    {
+      "name":"Hans Albert Einstein",
+      "yearOfBirth":1904,
+      "mother":"Mileva Marić"
+    },
+    {
+      "name":"Eduard \"Tete\" Einstein",
+      "yearOfBirth":1910,
+      "mother":"Mileva Marić"
+    }
+  ]
+}
+
+
+{
+  "persondetails": [
     {
       "name":"Lieserl Einstein",
       "yearOfBirth":1902,

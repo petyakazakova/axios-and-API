@@ -1,74 +1,66 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 
-import TableChildren from '../TableChildren/TableChildren';
 import IsLoading from '../IsLoading/IsLoading';
 
 class TableComp extends Component {
     state = {
-      parents: [],
-      error: null,
-      isLoading: true
+      persons: [],
+      error: false,
+      isLoading: true,
+      loadingChild: false,
+      activeParentId : null
     };
 
   componentDidMount() {
-    setTimeout(function() {
-      this.setState({
-        isLoading: false,
-      })
-    }.bind(this),3000); //loading delay
+    setTimeout(async() => {
+      //  The response we get from the API contains an object called data and that contains other objects.
+      // The information we want is available in data.results, which is an array of objects containing the data of individual users.
+      //map through the results array to obtain info for the users. The array of users is then used to set a new value for the users state
+      // axios.all([
 
-    axios
+      try {
+        //an array of persons with all children in it:
+        //persons.data - the response
+        await axios.get("http://assignment.siteimprove.com/api/persons")
+        .then(persons => {
+          persons.data.map(async(person, key) => {
+            //dynamic value. make a request for each person
+            console.log(person);
+            await axios.get(`http://assignment.siteimprove.com/api/persondetails/${person.Id}`).then(children => {
+              console.log(children.data);
+              // MAGIC ::::::::
+              person = {...person, children : children.data} //put person in a new object
+              persons.data[key] = person; //persons at this specific position. persons[key] = person
+              this.setState({persons : persons.data})
+            })
 
-      // EXTERNAL API LINK:
-      // .get("https://randomuser.me/api/?results=5")
-      // .then(response =>
-      //
-      //   // EXTERNAL API:
-      //   //  The response we get from the API contains an object called data and that contains other objects.
-      //   // The information we want is available in data.results, which is an array of objects containing the data of individual users.
-      //   //map through the results array to obtain info for the users. The array of users is then used to set a new value for the users state
-      //   response.data.results.map(user => ({
-      //     name: `${user.name.first} ${user.name.last}`,
-      //     username: `${user.login.username}`,
-      //     email: `${user.email}`,
-      //     image: `${user.picture.thumbnail}`
-      //
-      //   }))
-      // )
-      // .then(users => {
-      //   this.setState({
-      //     users,
-      //     isLoading: false,
-      //   });
-      // })
-      // .catch(error => this.setState({error, isLoading: false}));
-
-      //MY OWN API JSON
-      .get("https://api.myjson.com/bins/1c25mu")
-      .then(response => {
+          })
+        })
         this.setState({
-          isLoading: true,
-          parents: response.data.parents
+          isLoading: false
         });
-      })
-      .catch(error => this.setState({error, isLoading: false}));
+      }
+      catch(err){
+        this.setState({
+          error: true,
+          isLoading: false
+        })
+      }
+    },3000);
   }
 
   componentWillUnmount() {
     clearTimeout(this.isLoading);
   }
 
-  // const isMobile = window.innerWidth <= 900;
-
-
-  renderPeople() {
-
+  handleChildLoad = () => {
+    setTimeout(() => {this.setState({loadingChild:false})},3000)
   }
 
   render(){
-    const {isLoading, parents} = this.state;
-
+    let {isLoading, persons, error, activeParentId, loadingChild} = this.state; //destructuring
+    // let isMobile = (window.screen.width < 900) ? true : false //mobile under 900
     return(
       <table className="responsive-table striped col s10">
         <thead>
@@ -77,46 +69,68 @@ class TableComp extends Component {
             <th>Name</th>
             <th>Year of birth</th>
             <th>Children</th>
-            <th>Profession</th>
+            <th style={{display:(window.screen.width < 900) ? "none" : "block"}}>Profession</th>
           </tr>
         </thead>
+          {(error && !isLoading) && <p>Ops! The data is not loading.</p>}
+          {(isLoading && !error) && <IsLoading />}
+          {(!isLoading && !error) &&
 
-          {!isLoading ? (
-            //users.map(user => {
-            parents.map(parent => {
-              // const { id, name, yearOfBirth, numChildren, profession } = parent;
-              const { id, name, yearOfBirth, numChildren, profession } = parent;
-              // const { idChild, name,  } = parent;
-
+            persons.map(parent => {
+              let { Id, Name, YearOfBirth, NumChildren, Profession } = parent; //destruct
               return (
                 // <TableBody key={id} item={parent}/>
                 <tbody>
-                  <tr key={id}>
-                    <td>{id}</td>
-                    <td>{name}</td>
-                    <td>{yearOfBirth}</td>
-                    <td>{typeof numChildren === "number" ? numChildren : numChildren.length}
-                      {/* {typeof numChildren !== "number" ? */}
-                      {typeof numChildren === "object" ?
-                      <button className="btn-floating btn-small waves-effect waves-light blue" >
+                  <tr key={Id}>
+                    <td>{Id}</td>
+                    <td>{Name}</td>
+                    <td>{YearOfBirth}</td>
+                    <td>{NumChildren}
+                      <button className="btn-floating btn-small waves-effect waves-light blue"
+                        onClick={() => {
+                          if(parent.Id === activeParentId){
+                            this.setState({activeParentId: null})} else {
+                              this.setState({
+                              activeParentId : parent.Id,
+                              loadingChild : true
+                            })
+                          }}}>
                         <i  className="material-icons">+</i>
                       </button>
-                      : null}
                     </td>
-                    <td>{profession}</td>
+                    <td style={{display:(window.screen.width < 900) ? "none" : "block"}}>{Profession}</td>
                     {/* <TableChildren key={id} item={parent}/> */}
                   </tr>
-                  {/* COLLAPSIBLE TABLE */}
-                  <tr>
-                    <td>
-                      <TableChildren key={idChild} item={parents}/>
-                    </td>
-                  </tr>
+                  {(loadingChild && (activeParentId === parent.Id)) && <IsLoading />}
+                  {loadingChild ? this.handleChildLoad() :
+                  (parent.children && (activeParentId === parent.Id)) && parent.children.map((child, index) => {
+                    //the array im mapping through is seperate -> persons[0]
+                    let { Name, YearOfBirth, Mother } = child;
+                    return(
+                      <tr>
+                        <td>
+                          <table>
+                            {index === 0 &&
+                              (<thead>
+                              <th>Name</th>
+                              <th>Year of birth</th>
+                              <th>Mother</th>
+                            </thead>)}
+                            <tbody>
+                              <td>{Name}</td>
+                              <td>{YearOfBirth}</td>
+                              <td>{Mother}</td>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    )
+                  })
+                  }
                 </tbody>
               );
             })
-          ) : (
-            <IsLoading />)}
+          }
 
       </table>
     );
