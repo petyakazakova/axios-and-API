@@ -11,10 +11,9 @@ const TableBody = ({item}) => (
         <td>{item.yearOfBirth}</td>
         <td>{typeof item.numChildren === "number" ? item.numChildren : item.numChildren.length}
           {typeof item.numChildren !== "number" ?
-          <button className="btn-floating btn-small waves-effect waves-light blue accordion" >
+          <button className="btn-floating btn-small waves-effect waves-light blue" >
             <i  className="material-icons">+</i>
           </button>
-
           : null}
 
         </td>
@@ -28,7 +27,7 @@ const TableBody = ({item}) => (
           </div>
         </td>} */}
         <td>{item.profession}</td>
-        
+
       </tr>
   );
 

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 
-import TableBody from './TableBody';
+import TableChildren from '../TableChildren/TableChildren';
 import IsLoading from '../IsLoading/IsLoading';
 
 class TableComp extends Component {
@@ -45,7 +45,7 @@ class TableComp extends Component {
       // .catch(error => this.setState({error, isLoading: false}));
 
       //MY OWN API JSON
-      .get("https://api.myjson.com/bins/gvuuu")
+      .get("https://api.myjson.com/bins/1c25mu")
       .then(response => {
         this.setState({
           isLoading: true,
@@ -59,32 +59,66 @@ class TableComp extends Component {
     clearTimeout(this.isLoading);
   }
 
+  // const isMobile = window.innerWidth <= 900;
+
+
+  renderPeople() {
+
+  }
 
   render(){
     const {isLoading, parents} = this.state;
 
     return(
-          !isLoading ? (
+      <table className="responsive-table striped col s10">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Year of birth</th>
+            <th>Children</th>
+            <th>Profession</th>
+          </tr>
+        </thead>
+
+          {!isLoading ? (
             //users.map(user => {
             parents.map(parent => {
               // const { id, name, yearOfBirth, numChildren, profession } = parent;
-              const { id } = parent;
+              const { id, name, yearOfBirth, numChildren, profession } = parent;
+              // const { idChild, name,  } = parent;
+
               return (
-                <TableBody key={id} item={parent}/>
-                // <tr key={id}>
-                //   <td>{id}</td>
-                //   <td>{name}</td>
-                //   <td>{yearOfBirth}</td>
-                //   <td>{numChildren}
-                //     {/* <a href="/" className="btn-floating btn-small waves-effect waves-light blue"><i className="material-icons">+</i></a> */}
-                //   </td>
-                //   <td>{profession}</td>
-                // </tr>
+                // <TableBody key={id} item={parent}/>
+                <tbody>
+                  <tr key={id}>
+                    <td>{id}</td>
+                    <td>{name}</td>
+                    <td>{yearOfBirth}</td>
+                    <td>{typeof numChildren === "number" ? numChildren : numChildren.length}
+                      {/* {typeof numChildren !== "number" ? */}
+                      {typeof numChildren === "object" ?
+                      <button className="btn-floating btn-small waves-effect waves-light blue" >
+                        <i  className="material-icons">+</i>
+                      </button>
+                      : null}
+                    </td>
+                    <td>{profession}</td>
+                    {/* <TableChildren key={id} item={parent}/> */}
+                  </tr>
+                  {/* COLLAPSIBLE TABLE */}
+                  <tr>
+                    <td>
+                      <TableChildren key={idChild} item={parents}/>
+                    </td>
+                  </tr>
+                </tbody>
               );
             })
           ) : (
-            <IsLoading />
-          )
+            <IsLoading />)}
+
+      </table>
     );
   }
 }
