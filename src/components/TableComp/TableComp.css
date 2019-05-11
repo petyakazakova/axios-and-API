@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css?family=Inconsolata');
+
+body {
+  font-family: 'Inconsolata', sans-serif;
+  font-size: 16px;
+}
+
+.main-table {
+  box-shadow: 0px 10px 15px #eeeeee;
+}
+thead {
+  background: linear-gradient(to right, #36d1dc, #5b86e5);
+}
+
+td, th {
+  padding: 15px;
+}
+
+.btn-floating {
+  margin: 0 12px;
+}

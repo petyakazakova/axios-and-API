@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 
 import IsLoading from '../IsLoading/IsLoading';
+import TableCompCss from './TableComp.css';
 
 class TableComp extends Component {
     state = {
@@ -62,7 +63,7 @@ class TableComp extends Component {
     let {isLoading, persons, error, activeParentId, loadingChild} = this.state; //destructuring
     // let isMobile = (window.screen.width < 900) ? true : false //mobile under 900
     return(
-      <table className="responsive-table striped col s10">
+      <table className="main-table responsive-table striped col s12">
         <thead>
           <tr>
             <th>Id</th>
@@ -108,8 +109,8 @@ class TableComp extends Component {
                     let { Name, YearOfBirth, Mother } = child;
                     return(
                       <tr>
-                        <td>
-                          <table>
+                        <td colSpan="5">
+                          <table  className="responsive-table  col s12">
                             {index === 0 &&
                               (<thead>
                               <th>Name</th>
@@ -128,10 +129,10 @@ class TableComp extends Component {
                   })
                   }
                 </tbody>
+
               );
             })
           }
-
       </table>
     );
   }
